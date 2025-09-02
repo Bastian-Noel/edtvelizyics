@@ -1,0 +1,16 @@
+{
+  "name": "edtvelizyics",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Batian NOEL",
+  "license": "ISC",
+  "description": "Wrapper Node.js générant un calendrier ICS à partir de l'API Celcat pour EDT Vélizy.",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "express": "^5.1.0",
+    "he": "^1.2.0",
+    "ical-generator": "^9.0.0",
+    "qs": "^6.14.0"
+  }
+}
