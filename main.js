@@ -66,7 +66,7 @@ app.get("/ics", async (req, res) => {
     const cal = icalGenerator({
       name: `Emploi du temps ${group}`,
       prodId: "//UVSQ//ICAL-Generator//FR",
-      timezone: "Europe/Paris",
+      ttl: 600,
     });
 
     // Créer un tableau de types exclus
