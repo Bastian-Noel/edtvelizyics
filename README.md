@@ -1,61 +1,115 @@
-# Emploi du temps Velizy - ICS
 
-Ce projet permet de créer des **URL de calendriers compatibles avec iPhone, Google Agenda, Outlook, etc.** à partir des données de https://edt.rambouillet.iut-velizy.uvsq.fr/.
+# Emploi du temps Vélizy - ICS Lisible
 
-Ces URL peuvent être ajoutées directement dans vos applications de calendrier, et se mettent à jour automatiquement selon les modifications du planning.
+Ce projet permet de **générer des fichiers ICS plus lisibles et structurés** à partir des calendriers Celcat de l’IUT de Vélizy.  
+Les événements conservent leur UID et horaires exacts, mais les titres, descriptions et lieux sont nettoyés et harmonisés pour une meilleure lisibilité dans vos calendriers (iPhone, Google Agenda, Outlook, etc.).
 
 ---
 
 ## 📱 Configurer le calendrier sur votre appareil
 
 ### 🍎 iPhone / iPad
-1. Ouvrez l’app **Calendrier**.
-2. Touchez **Calendriers** en bas de l’écran, puis **Ajouter un calendrier / Nouveau calendrier**.
-3. Sélectionnez **Ajouter un calendrier avec abonnement**.
+1. Ouvrez l’app **Calendrier**.  
+2. Touchez **Calendriers** en bas de l’écran, puis **Ajouter un calendrier / Nouveau calendrier**.  
+3. Sélectionnez **Ajouter un calendrier avec abonnement**.  
 4. Saisissez l’URL du calendrier (voir ci-dessous) et cliquez sur **S’abonner**.
 
 ### 🤖 Google Agenda
-1. Sur PC ou navigateur, ouvrez [Google Agenda](https://calendar.google.com/).
-2. En haut à droite, cliquez sur **Paramètres → Paramètres**.
-3. Dans le menu de gauche, cliquez sur **Ajouter un agenda → À partir de l’URL**.
+1. Sur PC ou navigateur, ouvrez [Google Agenda](https://calendar.google.com/).  
+2. En haut à droite, cliquez sur **Paramètres → Paramètres**.  
+3. Dans le menu de gauche, cliquez sur **Ajouter un agenda → À partir de l’URL**.  
 4. Saisissez l’URL du calendrier et cliquez sur **Ajouter un agenda**.
 
-### 🔗 URL des calendriers
-| Groupe | URL |
-|--------|-----|
-| MMI1-A1 | `https://edtvelizyics.bastiannoel.com/ics?group=MMI1-A1` |
-| MMI1-A2 | `https://edtvelizyics.bastiannoel.com/ics?group=MMI1-A2` |
-| MMI1-B1 | `https://edtvelizyics.bastiannoel.com/ics?group=MMI1-B1` |
-| MMI1-B2 | `https://edtvelizyics.bastiannoel.com/ics?group=MMI1-B2` |
-| Autre | `https://edtvelizyics.bastiannoel.com/ics?group=<nom_de_la_ressource>` |
-
-> Remplacez `<Nom_de_la_Ressource>` par le nom exact du groupe ou de la ressource souhaitée.
 ---
 
-## ⏱ Fréquence de mise à jour des calendriers 
+## 🔗 URL des calendriers
 
-- **Google Agenda** : rafraîchit automatiquement toutes les **4 à 24 heures**. 
-- **Apple Calendar (iPhone / macOS)** : rafraîchit généralement toutes les **15 à 60 minutes**.  
-  Sur macOS, la fréquence peut être configurée dans : `Préférences → Comptes → Avancé → Actualiser tous les…`.  
+Pour récupérer l’URL d’un groupe :  
 
-💡 Conclusion : Les modifications de l’emploi du temps peuvent prendre plusieurs heures mais pas plus.
+1. Rendez-vous sur [https://celcat.iut-velizy.uvsq.fr/cal/groups.aspx](https://celcat.iut-velizy.uvsq.fr/cal/groups.aspx)  
+2. Sélectionnez le groupe souhaité et cliquez sur **Afficher URL** en bas.  
+3. Copiez la partie entre `ical/` et `/schedule.ics` de l’URL affichée.  
+4. Exemple : pour  
+```
 
----
+webcal://celcat.rambouillet.iut-velizy.uvsq.fr/cal/ical/GX-HQ2HQAHQ24661973/schedule.ics
 
-## 📅 Limitation des événements
+```
+la partie à utiliser est `GX-HQ2HQAHQ24661973`.  
 
-Pour éviter de surcharger votre calendrier, seules les **événements sur 1 mois ** sont inclus.
+Ensuite, utilisez l’URL publique :  
+
+```
+
+[https://edtvelizyics.bastiannoel.com/ics?group=](https://edtvelizyics.bastiannoel.com/ics?group=)<ID_DU_GROUPE>
+
+```
+
+- Optionnel : filtrage par type d’événement :  
+  - `CM` : Cours Magistraux  
+  - `TP` : Travaux Pratiques  
+  - `TD` : Travaux Dirigés  
+
+Exemple :  
+
+```
+
+[https://edtvelizyics.bastiannoel.com/ics?group=GX-HQ2HQAHQ24661973&amp;type=TD](https://edtvelizyics.bastiannoel.com/ics?group=GX-HQ2HQAHQ24661973&type=TD)
+
+```
 
 ---
 
 ## 🖥 Auto-hébergement
 
-Si vous ne voulez pas dépendre de mon serveur, vous pouvez faire tourner le projet sur votre propre serveur.
+Si vous souhaitez ne pas dépendre du serveur public, vous pouvez héberger le projet vous-même.
 
 ### Prérequis
 - [Docker](https://www.docker.com/) installé
 
 ### Démarrage avec Docker
 1. À la racine du projet (où se trouvent `Dockerfile` et `package.json`), construisez l’image :  
-   ```bash
-   docker build -t edtvelizyics .
+```bash
+docker build -t edtvelizyics .
+```
+
+2. Lancez le conteneur sur votre domaine ou serveur :
+
+```bash
+docker run -p 3000:3000 edtvelizyics
+```
+
+3. Accédez au calendrier depuis votre navigateur ou application avec :
+
+```
+https://<VOTRE_DOMAINE>/ics?group=<ID_DU_GROUPE>
+```
+
+---
+
+## 📌 Exemple de texte avant / après
+
+### Exemple original Celcat
+
+```
+Titre: R 1.04 - Culture numerique; Cours Magistraux (CM)
+Lieu: AV2 - VEL
+Description: 
+RIALLAND Ivanne; MMI1-B
+```
+
+### Exemple après amélioration
+
+```
+Titre: [CM] Culture numerique
+Lieu: AV2
+Description: 
+📚 Enseignant : RIALLAND Ivanne
+👥 Groupe : B
+```
+
+💡 **Remarques :**
+
+* Les **UID des événements sont conservés** depuis le ICS original de Celcat, ce qui permet à votre calendrier de détecter correctement les mises à jour.
+* Les **titres** sont harmonisés avec des tags `[CM]`, `[TP]`, `[TD]`.
+* Les **lieux et descriptions** sont nettoyés pour une meilleure lisibilité.

@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # 7. Commande pour démarrer l'application
-CMD ["node", "index.js"]
+CMD ["node", "main.js"]
