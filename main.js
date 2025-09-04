@@ -54,7 +54,7 @@ const cleanLocation = (loc) => {
 // ---- Serveur Express ----
 
 app.get("/ics", async (req, res) => {
-  const { group, type } = req.query; // récupérer type depuis l'URL
+  const { group, type, exclude } = req.query; // type = à inclure, exclude = types à exclure (comma separated)
   if (!group) return res.status(400).send("Paramètre 'group' requis");
 
   const ICAL_URL = `https://celcat.rambouillet.iut-velizy.uvsq.fr/cal/ical/${group}/schedule.ics`;
@@ -69,17 +69,24 @@ app.get("/ics", async (req, res) => {
       timezone: "Europe/Paris",
     });
 
+    // Créer un tableau de types exclus
+    const excludeTypes = exclude ? exclude.split(",").map((s) => s.trim().toUpperCase()) : [];
+
     Object.values(events)
       .filter((ev) => ev.type === "VEVENT")
       .forEach((ev) => {
         const title = parseTitle(ev.summary);
         const { prof, group: grp } = parseDescription(ev.description);
 
+        // Récupérer le tag de type dans le titre (CM, TP, TD, etc.)
+        const tagMatch = title.match(/^\[(CM|TP|TD|.*?)\]/);
+        const eventType = tagMatch ? tagMatch[1] : null;
+
         // Filtrage par type si param type fourni
-        if (type) {
-          const tagMatch = title.match(/^\[(CM|TP|TD|.*?)]/);
-          if (!tagMatch || tagMatch[1] !== type) return;
-        }
+        if (type && eventType !== type.toUpperCase()) return;
+
+        // Filtrage par exclusion
+        if (eventType && excludeTypes.includes(eventType)) return;
 
         cal.createEvent({
           start: ev.start,
